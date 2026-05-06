@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>李宁·智能预测系统</title>
+<style>
+body{background:#0f172a;color:#fff;text-align:center;font-family:sans-serif;}
+.box{margin:30px auto;width:90%;max-width:600px;}
+h1{color:#22c55e;}
+button{padding:10px 20px;margin:10px;background:#22c55e;border:none;}
+.result{background:#1e293b;padding:15px;border-radius:10px;margin-top:20px;}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h1>📊 李宁·自动预测系统</h1>
+
+<button onclick="predict()">🔥 生成预测</button>
+
+<div class="result" id="out">正在获取开奖...</div>
+</div>
+
+<script>
+async function load(){
+    try{
+        let r = await fetch("https://api.api68.com/Lottery/getLotteryList.do?lotCode=10048");
+        let j = await r.json();
+        let d = j.result.data[0];
+
+        document.getElementById("out").innerHTML =
+        "📡 最新期号："+d.preDrawIssue+
+        "<br>🎯 开奖："+d.preDrawCode+
+        "<br>🕒 时间："+d.preDrawTime;
+
+    }catch(e){
+        document.getElementById("out").innerHTML="❌ 数据获取失败";
+    }
+}
+
+function predict(){
+    let nums=[];
+    while(nums.length<5){
+        let n=Math.floor(Math.random()*49)+1;
+        if(!nums.includes(n)) nums.push(n);
+    }
+
+    document.getElementById("out").innerHTML +=
+    "<br><br>🔥 推荐特码："+nums.join(",");
+}
+
+load();
+setInterval(load,30000);
+</script>
+
+</body>
+</html>
